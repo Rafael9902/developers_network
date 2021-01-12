@@ -25,14 +25,23 @@ function saveUser(req, res){
     user.nick = params.nick;
     user.email = params.email;
     user.role = 'ROLE_USER';
-    user.img = null;
+    user.image = null;
 
-    bcrypt.hash(params.password, null, null, (err, hash) =>{
-        user.password = hash;
-        user.save((err, userStore) => {
-          if(err) return res.status(500).send('Error at save user');
-          userStore ? res.status(200).send({user: userStore}) : res.status(404).send({message: 'Error at register'});
-        });
+    //Find duplicate email
+    User.find({ $or:[{email: user.email.toLowerCase()}, {nick: user.nick.toLowerCase()}]}).exec((err, users) => {
+      if(err) return res.status(500).send({ message: 'Error at save user'});
+      if(users && users.length >= 1){
+        return res.status(200).send({message: 'User already exists'});
+      }
+      else{
+        bcrypt.hash(params.password, null, null, (err, hash) =>{
+            user.password = hash;
+            user.save((err, userStore) => {
+              if(err) return res.status(500).send({message: 'Error at save user'});
+              userStore ? res.status(200).send({user: userStore}) : res.status(404).send({message: 'Error at register'});
+            });
+        });  
+      }
     });
   }
   else{
