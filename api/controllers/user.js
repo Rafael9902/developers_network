@@ -5,6 +5,9 @@ var User = require('../models/user');
 var jwt = require('../services/jwt');
 var mongoose_pagination = require('mongoose-pagination');
 var mongoose = require('mongoose');
+var fs = require('fs');
+var path = require('path');
+
 mongoose.set('useFindAndModify', false);
 
 function home(req, res){
@@ -134,6 +137,42 @@ function updateUser(req, res){
   });
 }
 
+//Upload Images
+function uploadImage(req, res){
+  var user_id = req.params.id;
+
+  if(user_id != req.user.sub) return removeFiles(file_path, 'Permission Denied')
+
+  if(req.files){
+    var file_path = req.files.image.path;
+    var file_split = file_path.split('/');
+    var file_name = file_split[2];
+    var ext = file_name.split('\.');
+    var file_ext = ext[1];
+
+    if(file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif'){
+      User.findByIdAndUpdate(user_id, {image: file_name}, {new:true}, (err, userUpdated) =>{
+        if(err) return res.status(500).send({message: 'Error'});
+        if(!userUpdated) return res.status(404).send({message: 'User Not Updated'});
+        return res.status(200).send({user: userUpdated});
+      });
+
+    }
+    else{
+      return removeFiles(res, file_path, 'Extention not valid');
+    }
+  }
+  else{
+    return res.status(200).send({message: 'File Not upload'});
+  }
+}
+
+function removeFiles(res, file_path, message){
+  fs.unlink(file_path, (err) => {
+    return res.status(200).send({message: message});
+  });
+}
+
 module.exports = {
   home,
   pruebas,
@@ -141,5 +180,6 @@ module.exports = {
   loginUser,
   getUser,
   getUsers,
-  updateUser
+  updateUser,
+  uploadImage
 }
