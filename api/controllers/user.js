@@ -173,6 +173,18 @@ function removeFiles(res, file_path, message){
   });
 }
 
+function getImageFile(req, res){
+  var image_file = req.params.image_file;
+  var path_file = './uploads/users/' + image_file;
+
+  fs.exists(path_file, (exists) =>{
+    return exists
+          ? res.sendFile(path.resolve(path_file))
+          : res.status(200).send({message:'Image Not Found'});
+  });
+
+}
+
 module.exports = {
   home,
   pruebas,
@@ -181,5 +193,6 @@ module.exports = {
   getUser,
   getUsers,
   updateUser,
-  uploadImage
+  uploadImage,
+  getImageFile
 }
