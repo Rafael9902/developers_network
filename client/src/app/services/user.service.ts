@@ -9,6 +9,8 @@ import { GLOBAL } from './global'
 export class UserService{
 
   public url:string;
+  public identity;
+  public token;
 
   constructor(public _http:HttpClient){
     this.url = GLOBAL.url;
@@ -19,6 +21,32 @@ export class UserService{
       let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
       return this._http.post(this.url + 'register', params, {headers:headers});
+  }
+
+  signUp(user:User, gettoken = null): Observable<any>{
+
+      if(gettoken != null) user.gettoken = gettoken;
+
+      let params = JSON.stringify(user);
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+      return this._http.post(this.url + 'login', params, {headers:headers});
+  }
+
+  getIdentity(){
+      let identity = JSON.parse(localStorage.getItem('identity'));
+
+      this.identity = identity != undefined ? identity : null;
+
+      return this.identity;
+  }
+
+  getToken(){
+      let token = localStorage.getItem('token');
+
+      this.token = token != undefined ? token : null;
+
+      return this.token;
   }
 
 
