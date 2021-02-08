@@ -1,0 +1,17 @@
+.navbar-right{
+  float: right;
+  padding-left: 65%;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+li{
+  background-color: #343a40;
+}
+
+.pointer{
+  cursor: pointer;
+}

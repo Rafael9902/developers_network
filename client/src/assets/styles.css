@@ -1,4 +1,7 @@
 /** Generals **/
+
+@import "~bootstrap/sami/dist/css/bootstrap.css";
+
 .h1-strong{
     font-size: 35px;
     font-weight: bold;

@@ -23,7 +23,7 @@ export class UserService{
       return this._http.post(this.url + 'register', params, {headers:headers});
   }
 
-  signUp(user:User, gettoken = null): Observable<any>{
+  signUp(user, gettoken = null): Observable<any>{
 
       if(gettoken != null) user.gettoken = gettoken;
 

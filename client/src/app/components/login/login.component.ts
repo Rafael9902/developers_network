@@ -74,6 +74,8 @@ export class LoginComponent implements OnInit{
                   //Persistence User Token
                   localStorage.setItem('token', JSON.stringify(this.token));
 
+                  this._router.navigate(['/']);
+
                   //User Statistics
               }
 
