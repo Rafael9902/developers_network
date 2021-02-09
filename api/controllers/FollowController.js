@@ -86,21 +86,27 @@ function getFollowedUsers(req, res) {
     });
 }
 
-function getMyFollows(req, res) {
+function getFollows(req, res) {
+  var userId = req.user.sub;
+
+  var find = Follow.find({user: userId});
+
+  if(req.params.followed) find = Follow.find({followed: userId});
+
+  find.populate('user followed').exec((err, follows) => {
+    if (err) return res.status(500).send({ statusCode: 500, message: 'Error' });
+    if (!follows) return res.status(404).send({ statusCode: 404, message: "You Don't Follow Any User" });
+
+    return res.status(200).send({follows});
+  });
 
 }
-
-function getFollowsBack(req, res) {
-
-}
-
-
-
 
 module.exports = {
     prueba,
     saveFollow,
     deleteFollow,
     getFollowingUsers,
-    getFollowedUsers
+    getFollowedUsers,
+    getFollows
 }

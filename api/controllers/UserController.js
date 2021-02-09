@@ -1,5 +1,6 @@
 var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/User');
+var Follow = require('../models/Follow');
 var jwt = require('../services/jwt');
 var mongoose_pagination = require('mongoose-pagination');
 var mongoose = require('mongoose');
@@ -94,8 +95,34 @@ function getUser(req, res) {
         if (err) return res.status(500).send({ message: 'Error' });
         if (!user) return res.status(404).send({ message: 'User Not Found' });
 
-        return res.status(200).send({ user });
+        followUser(req.user.sub, userId).then((value) =>{
+          user.password = undefined;
+
+          return res.status(200).send({
+             user,
+             following: value.following,
+             followed: value.followed });
+        });
     });
+}
+
+async function followUser(identity_user_id, user_id){
+
+  var following = await Follow.findOne({"user": identity_user_id, "followed": user_id}).exec((err, follow) =>{
+        if(err) return handleError(err);
+        return follow;
+    });
+
+  var followed = await Follow.findOne({"user": user_id, "followed": identity_user_id}).exec((err, follow) =>{
+        if(err) return handleError(err);
+        return follow;
+    });
+
+    return {
+      following: following,
+      followed: followed
+    }
+
 }
 
 //Return a list of paginated users
@@ -106,11 +133,50 @@ function getUsers(req, res) {
 
     if (req.params.page) page = req.params.page;
 
+
     User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
         if (err) return res.status(500).send({ message: 'Error' });
         if (!users) return res.status(404).send({ message: 'Not Users Available' });
-        return res.status(200).send({ users, total, pages: Math.ceil(total / itemsPerPage) })
+
+        followUsersId(identity_user_id).then((value) =>{
+            return res.status(200).send({
+              users,
+              users_following: value.following,
+              users_follow_me: value.followed,
+              total,
+              pages: Math.ceil(total / itemsPerPage)
+             });
+        });
     });
+}
+
+async function followUsersId(user_id){
+    var following = await Follow.find({"user": user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec((err, follows) =>{
+        return follows;
+    });
+
+    var followed = await Follow.find({"followed": user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec((err, follows) =>{
+      return follows;
+    });
+
+    var following_clean = [];
+    var followed_clean = [];
+
+    following.forEach((follow) => {
+        following_clean.push(follow.followed);
+    });
+
+
+    followed.forEach((follow) => {
+        followed_clean.push(follow.user);
+    });
+
+
+    return {
+        following: following_clean,
+        followed: followed_clean
+    }
+
 }
 
 //Edit User data
@@ -176,6 +242,34 @@ function getImageFile(req, res) {
 
 }
 
+function getCounters(req, res){
+
+    var user_id = req.params.id ? req.params.id : req.user.sub;
+
+    getCountFollows(user_id).then((value) => {
+        return res.status(200).send(value);
+    });
+}
+
+async function getCountFollows(user_id){
+    var following = await Follow.count({"user": user_id}).exec((err, count) => {
+        if(err) return handleError(err);
+
+        return count;
+    });
+
+    var followed = await Follow.count({"followedd": user_id}).exec((err, count) => {
+        if(err) return handleError(err);
+
+        return count;
+    });
+
+    return {
+        following: following,
+        followed: followed
+    }
+}
+
 module.exports = {
     home,
     pruebas,
@@ -185,5 +279,6 @@ module.exports = {
     getUsers,
     updateUser,
     uploadImage,
-    getImageFile
+    getImageFile,
+    getCounters
 }
