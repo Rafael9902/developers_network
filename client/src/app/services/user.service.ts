@@ -11,6 +11,7 @@ export class UserService{
   public url:string;
   public identity;
   public token;
+  public stats;
 
   constructor(public _http:HttpClient){
     this.url = GLOBAL.url;
@@ -48,6 +49,28 @@ export class UserService{
 
       return this.token;
   }
+
+
+  getStats(){
+    let stats = JSON.parse(localStorage.getItem('stats'));
+
+    this.stats = stats != 'undefined' ? stats : null
+
+    return this.stats;
+  }
+
+  getCounters(user_id = null): Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', this.getToken());
+
+    if(user_id != null){
+      return this._http.get(this.url + 'counters/' + user_id, {headers: headers});
+    }
+    else{
+      return this._http.get(this.url + 'counters', {headers: headers});
+    }
+  }
+
+
 
 
 }

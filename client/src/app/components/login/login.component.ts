@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit{
                     this.getToken()
                 }
 
-                console.log(response.user);
+                //console.log(response.user);
                 this.status = 'success';
             },
             error => {
@@ -69,18 +69,13 @@ export class LoginComponent implements OnInit{
                   this.status = 'error';
               }
               else{
-                  this.status = 'success';
-
                   //Persistence User Token
                   localStorage.setItem('token', JSON.stringify(this.token));
 
-                  this._router.navigate(['/']);
-
-                  //User Statistics
+                  this.getCounters();
               }
 
-              console.log(response.user);
-              this.status = 'success';
+              //console.log(response.user);
           },
           error => {
               var error_message = <any>error;
@@ -92,5 +87,18 @@ export class LoginComponent implements OnInit{
 
           }
       );
+    }
+
+    getCounters(){
+      this._userService.getCounters().subscribe(
+        response =>{
+          localStorage.setItem('stats', JSON.stringify(response));
+          this.status = 'success';
+          this._router.navigate(['/']);
+        },
+        error =>{
+          console.log(<any>error);
+        }
+      )
     }
 }

@@ -108,15 +108,18 @@ function getUser(req, res) {
 
 async function followUser(identity_user_id, user_id){
 
-  var following = await Follow.findOne({"user": identity_user_id, "followed": user_id}).exec((err, follow) =>{
-        if(err) return handleError(err);
-        return follow;
-    });
+  var following = await Follow.findOne({ "user": identity_user_id, "followed": user_id }).exec().then((follow) => {
+         return follow;
+     }).catch((err) => {
+         return handleError(err);
+     });
 
-  var followed = await Follow.findOne({"user": user_id, "followed": identity_user_id}).exec((err, follow) =>{
-        if(err) return handleError(err);
-        return follow;
-    });
+     var followed = await Follow.findOne({ "user": user_id, "followed": identity_user_id }).exec().then((follow) => {
+         console.log(follow);
+         return follow;
+     }).catch((err) => {
+         return handleError(err);
+     });
 
     return {
       following: following,
@@ -247,22 +250,27 @@ function getCounters(req, res){
     var user_id = req.params.id ? req.params.id : req.user.sub;
 
     getCountFollows(user_id).then((value) => {
+      console.log('value', value);
         return res.status(200).send(value);
+    }).catch((err) => {
+        return handleError(err);
     });
 }
 
 async function getCountFollows(user_id){
-    var following = await Follow.count({"user": user_id}).exec((err, count) => {
-        if(err) return handleError(err);
 
-        return count;
+    var following = await Follow.countDocuments({"user": user_id}).exec().then((following) => {
+        return following;
+    }).catch((err) => {
+        return handleError(err);
     });
 
-    var followed = await Follow.count({"followedd": user_id}).exec((err, count) => {
-        if(err) return handleError(err);
-
-        return count;
+    const followed = await Follow.countDocuments({"followed": user_id}).exec().then((followed) => {
+        return followed;
+    }).catch((err) => {
+        return handleError(err);
     });
+
 
     return {
         following: following,
