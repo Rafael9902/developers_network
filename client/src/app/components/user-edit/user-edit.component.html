@@ -35,13 +35,6 @@
           <span *ngIf="!email.valid && email.touched">Correo Electrónico Obligatorio</span>
       </p>
 
-
-      <p>
-        <label>Imagen de Perfil</label>
-        <input type="file" placeholder="subir imagen"/>
-
-      </p>
-
       <input type="submit" name="" value="{{title}}" class="btn btn-success" [disabled]="!userEditForm.form.valid">
 
     </form>
