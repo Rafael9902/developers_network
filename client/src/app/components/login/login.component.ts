@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'login',
+    styleUrls: ['./login.component.css'],
     templateUrl: './login.component.html',
     providers: [UserService]
 })
@@ -15,10 +16,12 @@ export class LoginComponent implements OnInit{
     public status:string;
     public identity;
     public token;
+    public backgroundUrl;
 
     constructor(private _route:ActivatedRoute, private _router:Router, private _userService:UserService){
       this.title = 'Iniciar Sesión';
       this.user = new User("","","","","","","ROLE_USER","");
+      this.backgroundUrl = "../../../assets/imgs/img1.jpg";
     }
 
     ngOnInit(){

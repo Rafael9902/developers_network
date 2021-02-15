@@ -192,11 +192,26 @@ function updateUser(req, res) {
 
     if (user_id != req.user.sub) return res.status(500).send({ message: 'Permission Denied' });
 
-    User.findByIdAndUpdate(user_id, update, { new: true }, (err, userUpdated) => {
-        if (err) return res.status(500).send({ message: 'Error' });
-        if (!userUpdated) return res.status(404).send({ message: 'User Not Updated' });
-        return res.status(200).send({ user: userUpdated });
-    });
+
+    User.find({ $or: [{ email: update.email.toLowerCase() }, { nick: update.nick.toLowerCase()}]}).exec((err, users) => {
+
+      var user_isset = false;
+       users.forEach((user) => {
+         if(user && user._id != user_id) user_isset = true;
+       });
+
+       if(user_isset) return res.status(404).send({message: 'Data in use' })
+
+        //if(update._id != user_id) return res.status(500).send({message: 'Duplicated Data'});
+
+        User.findByIdAndUpdate(user_id, update, { new: true }, (err, userUpdated) => {
+            if (err) return res.status(500).send({ message: 'Error' });
+            if (!userUpdated) return res.status(404).send({ message: 'User Not Updated' });
+            return res.status(200).send({ user: userUpdated });
+        });
+    })
+
+
 }
 
 //Upload Images

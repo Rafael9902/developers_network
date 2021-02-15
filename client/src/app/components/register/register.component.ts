@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'register',
+    styleUrls: ['./register.component.css'],
     templateUrl: './register.component.html',
     providers: [UserService]
 })
