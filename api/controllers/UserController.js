@@ -154,12 +154,17 @@ function getUsers(req, res) {
 }
 
 async function followUsersId(user_id){
-    var following = await Follow.find({"user": user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec((err, follows) =>{
-        return follows;
+
+    var following = await Follow.find({"user": user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec().then((following) => {
+        return following;
+    }).catch((err) => {
+      return handleError(err);
     });
 
-    var followed = await Follow.find({"followed": user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec((err, follows) =>{
-      return follows;
+    var followed = await Follow.find({"followed": user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec().then((followed) => {
+        return followed;
+    }).catch((err) => {
+      return handleError(err);
     });
 
     var following_clean = [];

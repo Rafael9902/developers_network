@@ -87,3 +87,17 @@ input:focus {
 .links a {
     margin-left: 4px;
 }
+
+.navigation .avatar{
+  width: 35px;
+  height: 35px;
+  border-radius: 100px;
+  overflow: hidden;
+  margin-right: 2px;
+  margin-top: 10px;
+}
+
+.avatar-image{
+  width: 35px;
+  height: 35px;
+}

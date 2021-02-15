@@ -57,6 +57,19 @@
             class="form-control" placeholder="Correo Electrónico" required>
         </div>
 
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
+
+          <div *ngIf="user.image">
+            <img src="{{ url + 'get-image-user/' + user.image}}">
+          </div>
+
+          <input type="file" placeholder="subir imagen" (change)="fileChangeEvent($event)"/>
+
+        </div>
+
         <div class="form-group">
           <input type="submit" value="Actualizar" class="btn float-right login_btn" [disabled]="!userEditForm.form.valid">
         </div>
