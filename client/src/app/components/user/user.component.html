@@ -1,19 +1,28 @@
-<div>
 
-  <h1 class="h1-strong">{{title}}</h1>
+<div class="container">
 
-  <div class="people">
-    <div *ngFor="let user of users" class="item-user">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="user_name pull-left">
-              <p><a href="#"> {{user.name + ' ' + user.lastname}} </a></p>
-              <p class="nickname">{{user.nick}}</p>
-            </div>
-          </div>
-        </div>
+  <div class="d-flex justify-content-center h-100">
+
+  <div class="card" *ngFor="let user of users" class="d-flex justify-content-center h-100">
+    <div class="card-header">
+      <img src="{{ url + 'get-image-user/' + user.image}}" *ngIf="user.image">
+      <img src="assets/imgs/person.png" *ngIf="!user.image">
     </div>
 
+    <div class="nick-name col-lg-2">
+      <a href="#"> {{user.name + ' ' + user.lastname}} </a>
+      <p class="nickname">{{user.nick}}</p>
+    </div>
+
+    </div>
+
+
+  </div>
   </div>
 
-</div>
+  <div class="pagination_btn">
+    <ul class="pagination pull-right">
+      <li *ngIf="page > 1"><a [routerLink]="['/people', prevPage ]">Anterior</a></li>
+      <li *ngIf="pages != page"><a [routerLink]="['/people', nextPage]">Siguiente</a></li>
+    </ul>
+  </div>

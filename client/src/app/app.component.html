@@ -14,12 +14,13 @@
                   <span class="glyphicon glyphicon-home">Inicio</span></a>
             </li>
 
+<!--
             <li class="nav-item">
                 <a class="nav-link" href="#">TimeLine</a>
             </li>
-
+-->
             <li class="nav-item">
-                <a [routerLink]="['/people']" [routerLinkActive]="['active']" class="nav-link" href="#">People</a>
+                <a [routerLink]="['/people', 1]" [routerLinkActive]="['active']" class="nav-link" href="#">Personas</a>
             </li>
 
         </ul>
@@ -78,7 +79,7 @@
 
 </nav>
 <button type="button" class="btn btn-default" aria-label="Left Align">
-  <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+  <span class="glyphicon glyphicon-align-left" aria-hidden="true" hidden></span>
 </button>
 
 <router-outlet></router-outlet>

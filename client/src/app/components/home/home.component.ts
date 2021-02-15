@@ -11,9 +11,11 @@ import { UserService } from '../../services/user.service';
 
 export class HomeComponent implements OnInit{
     public title:string;
+    public identity;
 
-    constructor(){
-        this.title = 'Bienvenido/a ';
+    constructor(private _userService:UserService){
+        this.title = 'Bienvenido(a) ';
+        this.identity = this._userService.getIdentity();
     }
 
     ngOnInit(){

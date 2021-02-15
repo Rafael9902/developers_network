@@ -21,15 +21,16 @@ export class UserComponent implements OnInit {
   public total;
   public pages;
   public users: User[];
+  public url;
 
   constructor(private _route:ActivatedRoute, private _router:Router, private _userService:UserService) {
     this.title = 'Personas';
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
+    this.url = GLOBAL.url;
   }
 
   ngOnInit(): void {
-    console.log('users');
     this.actualPage();
   }
 
@@ -38,7 +39,7 @@ export class UserComponent implements OnInit {
           let page = +params['page'];
           this.page = page;
 
-          if(!page){
+          if(!params['page']){
             page = 1;
           }
           else{
@@ -47,6 +48,8 @@ export class UserComponent implements OnInit {
 
             if(this.prevPage <= 0) this.prevPage = 1;
           }
+
+          console.log(this.nextPage,this.prevPage);
 
           this.getUsers(page);
 
