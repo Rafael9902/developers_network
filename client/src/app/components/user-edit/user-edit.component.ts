@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 @Component({
     selector: 'user-edit',
     templateUrl: 'user-edit.component.html',
+    styleUrls: ['./user-edit.component.css'],
     providers: [UserService]
 })
 

@@ -1,0 +1,18 @@
+html, body {
+  background-image: url("../../../assets/imgs/img7.jpg");
+}
+
+.card {
+    height: 420px;
+}
+
+.login_btn {
+    color: black;
+    background-color: #FFC312;
+    width: 100px;
+}
+
+.login_btn:hover {
+    color: black;
+    background-color: white;
+}

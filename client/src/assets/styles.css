@@ -16,6 +16,18 @@ body {
     align-content: center;
 }
 
+
+.login_btn {
+    color: black;
+    background-color: #FFC312;
+    width: 100px;
+}
+
+.login_btn:hover {
+    color: black;
+    background-color: white;
+}
+
 .card {
     height: 370px;
     margin-top: auto;

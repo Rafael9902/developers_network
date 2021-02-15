@@ -28,6 +28,6 @@ export class AppComponent implements OnInit, DoCheck{
   logout(){
     localStorage.clear();
     this.identity = null;
-    this._router.navigate(['/']);
+    this._router.navigate(['/login']);
   }
 }
